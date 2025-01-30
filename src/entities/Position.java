@@ -4,22 +4,15 @@ public class Position {
 
 	private Character file; //Columns
 	private Character rank; //Rows
-	private String value; //piece
+	private Piece piece; //piece
 	
-
-	public Position(Character file, Character rank, String value) {
+	public Position() {}
+	
+	public Position(Character file, Character rank, Piece piece) {
 		super();
 		this.file = file;
 		this.rank = rank;
-		this.value = value;
-	}
-
-	public String getValue() {
-		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
+		this.piece = piece;
 	}
 
 	public Character getFile() {
@@ -37,7 +30,15 @@ public class Position {
 	public void setRank(Character rank) {
 		this.rank = rank;
 	}
-	
+
+	public Piece getPiece() {
+		return piece;
+	}
+
+	public void setPiece(Piece piece) {
+		this.piece = piece;
+	}
+
 	public String getPosition() {
 		return file.toString()+rank.toString();
 	

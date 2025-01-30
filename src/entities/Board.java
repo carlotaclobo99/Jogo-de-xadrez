@@ -9,32 +9,48 @@ public class Board {
 
 	List<Piece> captured_white = new ArrayList<>();
 	List<Piece> captured_black = new ArrayList<>();
+	
+	private Player p1;
+	private Player p2;
 
 	List<Character> files = new ArrayList<Character>(List.of('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'));
 	List<Integer> ranks = new ArrayList<Integer>(List.of(1, 2, 3, 4, 5, 6, 7, 8));
 
 	public Board() {
 	}
+	
+	public Board(Position[][] positions, Player p1, Player p2) {
+		super();
+		this.positions = positions;
+		this.p1 = p1;
+		this.p2 = p2;
+	}
 
 	public String loadBoard() {
-		System.out.println("Creating new board:" + "\n");
 		String table = "";
 		String header = "   ";
 		for (Character file: files) {
 			header += " "+file.toString()+" ";
 		}
+		table += "           "+p1.getName()+"\n";
+		table += "           "+p1.getColor()+"\n";
+		System.out.println();
 		table += header+" \n";
 		table += "  --------------------------\n";
 		for (int j = 0; j<8; j++) {
 			String row = ranks.get(j).toString()+"| ";
 			for (int i = 0; i<8; i++) {
-				String pos = positions[i][j].getValue();
+				Piece piece = positions[i][j].getPiece();
+				String pos = piece.getValue();
 				row += " "+pos+" ";
 			}
 			table += row +" |"+ ranks.get(j).toString()+"\n";
 		}
 		table += "  --------------------------\n";
-		table += header;
+		
+		table += header+"\n";
+		table += "            "+p2.getColor()+"\n";
+		table += "            "+p2.getName()+"\n";
 		return table;
 	}
 
@@ -47,7 +63,7 @@ public class Board {
 	}
 	
 	public void updatePosition(Position position) {
-		position.setValue(position.getValue());
+		position.getPiece().setValue((position.getPiece().getValue()));
 		Character file = position.getFile();
 		Character rank = position.getRank();
 		positions[files.indexOf(file)][ranks.indexOf(rank)] = position;

@@ -9,7 +9,7 @@ import entities.Piece;
 import entities.Player;
 import entities.Position;
 
-public class Program {
+public class Program2 {
 
 	public static void main(String[] args) {
 		
@@ -19,8 +19,8 @@ public class Program {
 		List<String> setup = new ArrayList<String>(List.of("R", "B", "N", "Q", "K","N","B","R"));
 		
 		Position aux[][] = new Position[8][8];
-		Player p1 = new Player("Maria", "White");
-		Player p2 = new Player("Sara", "Black");
+		Player p1 = new Player("Maria", "white");
+		Player p2 = new Player("Sara", "black");
 		List<Player> players = new ArrayList<Player>(List.of(p1, p2));
 		
 		for (Player p : players) {
@@ -29,6 +29,7 @@ public class Program {
 					Position pos = null;
 					Piece piece = new Piece();
 					piece.setPlayer(p);
+
 					if (i == 0 || i == 7) {
 						piece.setValue(setup.get(j));
 						pos = new Position(files.get(j), ranks.get(i), piece);
@@ -43,28 +44,33 @@ public class Program {
 							pos = new Position(files.get(j), ranks.get(i),piece);
 						}
 					}
+					
+					
 					aux[j][i] = pos;
 				}
 			}
 		}	
-			
-		Board board = new Board(aux, p1, p2);
+		
 		System.out.println("Creating new board:" + "\n");
+		Board board = new Board(aux, p1, p2);
+
 		System.out.println(board.loadBoard());
 		System.out.println();
 		String check = "";
 		Player current_player;
-		System.out.println(files.indexOf('h'));
+		
 		for (int i = 0; i<3; i++) {
 			for (Player p : players) {
 				current_player = p;
+				System.out.print(current_player.getName() + "'s turn, ");
 				System.out.println(current_player.getColor()+" to move:");
 				
 				String move = sc.next();
 				Character file = (char) move.charAt(0);
 				Character rank = (char) move.charAt(1);
 				Position current = board.getPositions()[files.indexOf(file)][ranks.indexOf(rank)];
-
+				System.out.println(current.getPiece().getPlayer().getName());
+				System.out.println(current.getPiece().getPlayer().getName() == current_player.getName());
 				if (current.getPiece().getPlayer() != current_player) {
 					System.out.println("This piece is not yours!");
 					System.out.println("Please choose another piece: ");
