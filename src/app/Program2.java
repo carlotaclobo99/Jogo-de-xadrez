@@ -12,45 +12,46 @@ import entities.Position;
 public class Program2 {
 
 	public static void main(String[] args) {
-		
+
 		Scanner sc = new Scanner(System.in);
 		List<Character> files = new ArrayList<Character>(List.of('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'));
 		List<Character> ranks = new ArrayList<Character>(List.of('1', '2', '3', '4', '5', '6', '7', '8'));
-		List<String> setup = new ArrayList<String>(List.of("R", "B", "N", "Q", "K","N","B","R"));
-		
+		List<String> setup = new ArrayList<String>(List.of("R", "B", "N", "Q", "K", "N", "B", "R"));
+
 		Position aux[][] = new Position[8][8];
 		Player p1 = new Player("Maria", "white");
 		Player p2 = new Player("Sara", "black");
 		List<Player> players = new ArrayList<Player>(List.of(p1, p2));
-		
-		for (Player p : players) {
-			for (int j = 0; j<8; j++) {
-				for (int i = 0; i<8; i++) {
-					Position pos = null;
-					Piece piece = new Piece();
-					piece.setPlayer(p);
 
-					if (i == 0 || i == 7) {
-						piece.setValue(setup.get(j));
+		for (int j = 0; j < 8; j++) {
+			for (int i = 0; i < 8; i++) {
+				Position pos = null;
+				Piece piece = new Piece();
+
+				if (i == 0 || i == 7) {
+					piece.setValue(setup.get(j));
+					pos = new Position(files.get(j), ranks.get(i), piece);
+				} else {
+					if (i == 1 || i == 6) {
+						piece.setValue("p");
+						pos = new Position(files.get(j), ranks.get(i), piece);
+					} else {
+						piece.setValue("-");
 						pos = new Position(files.get(j), ranks.get(i), piece);
 					}
-					else {
-						if (i == 1 || i == 6) {
-							piece.setValue("p");
-							 pos = new Position(files.get(j), ranks.get(i), piece);
-						}
-						else { 
-							piece.setValue("-");
-							pos = new Position(files.get(j), ranks.get(i),piece);
-						}
-					}
-					
-					
-					aux[j][i] = pos;
 				}
+				if (j > 3) {
+					piece.setPlayer(p2);
+				}
+				
+				else {
+					piece.setPlayer(p1);
+				}
+
+				aux[j][i] = pos;
 			}
-		}	
-		
+		}
+
 		System.out.println("Creating new board:" + "\n");
 		Board board = new Board(aux, p1, p2);
 
@@ -58,20 +59,23 @@ public class Program2 {
 		System.out.println();
 		String check = "";
 		Player current_player;
-		
-		for (int i = 0; i<3; i++) {
+		Position test = new Position('a', '2', new Piece("R", p1));
+		System.out.println(test.getPiece().getPlayer().getName());
+
+		for (int i = 0; i < 3; i++) {
 			for (Player p : players) {
-				current_player = p;
-				System.out.print(current_player.getName() + "'s turn, ");
-				System.out.println(current_player.getColor()+" to move:");
-				
+
+				System.out.print(p.getName() + "'s turn, ");
+				System.out.println(p.getColor() + " to move:");
+
 				String move = sc.next();
 				Character file = (char) move.charAt(0);
 				Character rank = (char) move.charAt(1);
+				System.out.println(files.indexOf(file));
 				Position current = board.getPositions()[files.indexOf(file)][ranks.indexOf(rank)];
 				System.out.println(current.getPiece().getPlayer().getName());
-				System.out.println(current.getPiece().getPlayer().getName() == current_player.getName());
-				if (current.getPiece().getPlayer() != current_player) {
+				System.out.println(current.getPiece().getPlayer().getName() == p.getName());
+				if (current.getPiece().getPlayer() != p) {
 					System.out.println("This piece is not yours!");
 					System.out.println("Please choose another piece: ");
 					move = sc.next();
@@ -79,7 +83,7 @@ public class Program2 {
 					rank = (char) move.charAt(1);
 					current = board.getPositions()[files.indexOf(file)][ranks.indexOf(rank)];
 				}
-				
+
 				System.out.println("Moving to: ");
 				String move1 = sc.next();
 				Character file1 = move1.charAt(0);
@@ -94,24 +98,24 @@ public class Program2 {
 					rank1 = move1.charAt(1);
 					new_pos = board.getPositions()[files.indexOf(file1)][ranks.indexOf(rank1)];
 				}
-				
-				if (new_pos.getPiece().getValue()=="K") {
+
+				if (new_pos.getPiece().getValue() == "K") {
 					System.out.println("Check-mate!");
 					check = "Yes";
 					break;
 				}
 				new_pos.getPiece().setValue(current.getPiece().getValue());
 				current.getPiece().setValue("-");
-				
+
 				System.out.println(board.loadBoard());
 
-			}		
+			}
 			if (check == "Yes") {
 				break;
-				
+
 			}
 		}
-		
+
 		sc.close();
 	}
 
