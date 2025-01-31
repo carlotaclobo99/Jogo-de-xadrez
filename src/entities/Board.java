@@ -54,7 +54,7 @@ public class Board {
 				Piece piece = pos.getPiece();
 				if (piece != null) {
 					String val = piece.getValue();
-					row += " "+pos.getPiece().getValue()+" ";
+					row += " "+val+" ";
 			}
 				else {
 					row += " "+"-"+" ";
@@ -85,4 +85,45 @@ public class Board {
 	public void captureBlack(Piece piece) {
 		captured_black.add(piece);
 	}
+	
+	public boolean legalPiece(Piece piece, Player p) {
+		boolean legal = true;
+		if (piece.getPlayer() != p) {
+			legal = false;
+			System.out.println("This piece is not yours!");
+			System.out.println("Please choose another piece: ");
+		}
+		return legal;
+	}
+	
+	public boolean legalMove(Position init_pos, Position dest_pos, Player p) {
+		boolean legal = true;
+		Piece piece = init_pos.getPiece();
+		String val = piece.getValue().toLowerCase();
+		
+		if (dest_pos.getPiece().getPlayer() == p) {
+			legal = false;
+			System.out.println("You cannot take one of your pieces!");
+			System.out.println("Choose another cell: ");
+		}
+		switch (val) {
+			case "b": {
+				if (init_pos.getFile() == dest_pos.getFile() || init_pos.getRank() == dest_pos.getRank()) {
+					System.out.println("The bishop can only move diagonally!");
+					System.out.println("Choose another cell: ");
+					legal = false;
+				}
+			}	
+		}
+		return legal;
+	}
+	
+	public void movePiece(Position init_pos, Position dest_pos) {
+		
+		dest_pos.getPiece().setValue(init_pos.getPiece().getValue());
+		dest_pos.getPiece().setPlayer(init_pos.getPiece().getPlayer());
+		init_pos.getPiece().setValue("-");
+		init_pos.getPiece().setPlayer(null);
+	}
+	
 }

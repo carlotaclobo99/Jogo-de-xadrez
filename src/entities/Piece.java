@@ -4,7 +4,7 @@ public class Piece {
 	
 	private String value;
 	private Player player;
-	
+
 	public Piece() {
 		
 	}
@@ -30,5 +30,7 @@ public class Piece {
 	public void setPlayer(Player player) {
 		this.player = player;
 	}
+	
+	
 
 }

@@ -21,11 +21,10 @@ public class Program {
 		
 		Player p1 = new Player("Maria", "white");
 		Player p2 = new Player("Sara", "black");
-		Player pnone = new Player("AnA", "azul");
+		Player pnone = null;
 		List<Player> players = new ArrayList<Player>(List.of(p1, p2));
 		Board board = new Board(aux, p1, p2);
 		board.createBoard();
-		
 
 		for (int rank = 0; rank < 8; rank++) {
 			for (int file = 0; file < 8; file++) {
@@ -88,9 +87,8 @@ public class Program {
 
 				Position current = board.getPositions()[ranks.indexOf(rank)][files.indexOf(file)];
 
-				while (current.getPiece().getPlayer() != p) {
-					System.out.println("This piece is not yours!");
-					System.out.println("Please choose another piece: ");
+				while (board.legalPiece(current.getPiece(), p)!=true) {
+					
 					move = sc.next();
 					file = (char) move.charAt(0);
 					rank = (char) move.charAt(1);
@@ -103,9 +101,8 @@ public class Program {
 				Character rank1 = move1.charAt(1);
 				Position new_pos = board.getPositions()[ranks.indexOf(rank1)][files.indexOf(file1)];
 
-				while (new_pos.getPiece().getPlayer() == p) {
-					System.out.println("You cannot take one of your pieces!");
-					System.out.println("Choose another cell: ");
+				while (board.legalMove(current, new_pos, p)!=true) {
+					
 					move1 = sc.next();
 					file1 = move1.charAt(0);
 					rank1 = move1.charAt(1);
@@ -117,11 +114,8 @@ public class Program {
 					check = "Yes";
 					break;
 				}
-				new_pos.getPiece().setValue(current.getPiece().getValue());
-				new_pos.getPiece().setPlayer(null);
-				current.getPiece().setValue("-");
-				current.getPiece().setPlayer(p);
-
+				
+				board.movePiece(current, new_pos);
 				System.out.println(board.loadBoard());
 
 			}
