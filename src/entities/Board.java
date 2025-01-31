@@ -9,7 +9,7 @@ public class Board {
 
 	List<Piece> captured_white = new ArrayList<>();
 	List<Piece> captured_black = new ArrayList<>();
-	
+
 	private Player p1;
 	private Player p2;
 
@@ -18,20 +18,20 @@ public class Board {
 
 	public Board() {
 	}
-	
+
 	public Board(Position[][] positions, Player p1, Player p2) {
 		super();
 		this.positions = positions;
 		this.p1 = p1;
 		this.p2 = p2;
 	}
-	
+
 	public void createBoard() {
-		for (int rank = 0; rank<8; rank++) {
-			for (int file = 0; file<8; file++) { 
-				
+		for (int rank = 0; rank < 8; rank++) {
+			for (int file = 0; file < 8; file++) {
+
 				positions[rank][file] = new Position(rank, file, null);
-			
+
 			}
 		}
 	}
@@ -39,34 +39,33 @@ public class Board {
 	public String loadBoard() {
 		String table = "";
 		String header = "   ";
-		for (Character file: files) {
-			header += " "+file.toString()+" ";
+		for (Character file : files) {
+			header += " " + file.toString() + " ";
 		}
-		table += "           "+p1.getName()+"\n";
-		table += "           "+p1.getColor()+"\n";
+		table += "           " + p1.getName() + "\n";
+		table += "           " + p1.getColor() + "\n";
 		System.out.println();
-		table += header+" \n";
+		table += header + " \n";
 		table += "  --------------------------\n";
-		for (int rank = 0; rank<8; rank++) {
-			String row = ranks.get(rank).toString()+"| ";
-			for (int file = 0; file<8; file++) {
+		for (int rank = 0; rank < 8; rank++) {
+			String row = ranks.get(rank).toString() + "| ";
+			for (int file = 0; file < 8; file++) {
 				Position pos = positions[rank][file];
 				Piece piece = pos.getPiece();
 				if (piece != null) {
 					String val = piece.getValue();
-					row += " "+val+" ";
-			}
-				else {
-					row += " "+"-"+" ";
+					row += " " + val + " ";
+				} else {
+					row += " " + "-" + " ";
 				}
 			}
-			table += row +" |"+ ranks.get(rank).toString()+"\n";
+			table += row + " |" + ranks.get(rank).toString() + "\n";
 		}
 		table += "  --------------------------\n";
-		
-		table += header+"\n";
-		table += "            "+p2.getColor()+"\n";
-		table += "            "+p2.getName()+"\n";
+
+		table += header + "\n";
+		table += "            " + p2.getColor() + "\n";
+		table += "            " + p2.getName() + "\n";
 		return table;
 	}
 
@@ -85,7 +84,7 @@ public class Board {
 	public void captureBlack(Piece piece) {
 		captured_black.add(piece);
 	}
-	
+
 	public boolean legalPiece(Piece piece, Player p) {
 		boolean legal = true;
 		if (piece.getPlayer() != p) {
@@ -95,7 +94,7 @@ public class Board {
 		}
 		return legal;
 	}
-	
+
 	public boolean legalMove(Position init_pos, Position dest_pos, Player p) {
 		boolean legal = true;
 		Piece piece = init_pos.getPiece();
@@ -114,16 +113,26 @@ public class Board {
 					legal = false;
 				}
 			}	
+		
+		
+		case "r": {
+			if (init_pos.getFile() != dest_pos.getFile() && init_pos.getRank() != dest_pos.getRank()) {
+				System.out.println("The rook can only move along the same file or rank!");
+				System.out.println("Choose another cell: ");
+				legal = false;
+			}
+		}	
 		}
 		return legal;
+
 	}
-	
+
 	public void movePiece(Position init_pos, Position dest_pos) {
-		
+
 		dest_pos.getPiece().setValue(init_pos.getPiece().getValue());
 		dest_pos.getPiece().setPlayer(init_pos.getPiece().getPlayer());
 		init_pos.getPiece().setValue("-");
 		init_pos.getPiece().setPlayer(null);
 	}
-	
+
 }
