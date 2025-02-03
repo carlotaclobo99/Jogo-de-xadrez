@@ -54,24 +54,24 @@ public class Program {
 				Character rank1 = move1.charAt(1);
 				Position new_pos = board.getPositions()[board.getRanks().indexOf(rank1)][board.getFiles().indexOf(file1)];
 				Move move = new Move(current, new_pos);
-				
-				while (game.legalMove(new Move(current, new_pos), p)==false) {
+				while (game.legalMove(move, p)==false) {
 					
 					move1 = sc.next();
 					file1 = move1.charAt(0);
 					rank1 = move1.charAt(1);
 					new_pos = board.getPositions()[board.getRanks().indexOf(rank1)][board.getFiles().indexOf(file1)];
-				
+					move = new Move(current, new_pos);
 				}
-
+				
 				if (new_pos.getPiece().getValue() == "K") {
 					System.out.println("Check-mate!");
 					check = "Yes";
 					winner = p;
 					break;
 				}
-				
+
 				game.movePiece(move, p);
+
 				System.out.println(game.loadBoard());
 
 			}

@@ -14,7 +14,6 @@ public class Game {
 
 	private Player p1;
 	private Player p2;	
-	Player p3 = new Player("Ana", "blue");
 	public Game() {
 	}
 	
@@ -55,6 +54,102 @@ public class Game {
 
 	public void updateMoves(List<Move> moves, Move move) {
 		moves.add(move);
+	}
+	
+	
+	public List<Piece> getCaptured_p1() {
+		return captured_p1;
+	}
+
+	public List<Piece> getCaptured_p2() {
+		return captured_p2;
+	}
+
+	public void createBoard() {
+		
+		List<String> setup = board.getSetup();
+		for (int rank = 0; rank < 8; rank++) {
+			for (int file = 0; file < 8; file++) {
+				Piece piece = new Piece();
+				Position pos = new Position(rank, file, piece);
+
+				if (rank == 0 || rank == 7) {
+					piece.setValue(setup.get(file));
+
+					pos = new Position(rank, file, piece);
+				} else {
+					if (rank == 1 || rank == 6) {
+						piece.setValue("p");
+						pos = new Position(rank, file, piece);
+					} else {
+						piece.setValue("-");
+						pos = new Position(rank, file, piece);
+					}
+				}
+				if (rank < 2) {
+					piece.setPlayer(p1);
+					piece.setValue(piece.getValue().toUpperCase());
+				}
+
+				if (rank > 5) {
+					piece.setPlayer(p2);
+					piece.setValue(piece.getValue().toLowerCase());
+				}
+
+				if (rank >= 2 && rank <= 5) {
+					piece.setPlayer(null);
+				}
+				board.getPositions()[rank][file] = pos;
+			}
+		}
+
+	}
+	
+	public String loadBoard() {
+
+		List<Character> files = board.getFiles();
+		List<Character> ranks = board.getRanks();
+
+		String table = "";
+		String header = "   ";
+		for (Character file : files) {
+			header += " " + file.toString() + " ";
+		}
+		table += "           " + p1.getName() + "\n";
+		table += "           " + p1.getColor() + "\n";
+		System.out.println();
+		table += header + " \n";
+		table += "  --------------------------\n";
+		for (int rank = 0; rank < 8; rank++) {
+			String row = ranks.get(rank).toString() + "| ";
+			for (int file = 0; file < 8; file++) {
+				Position pos = board.getPositions()[rank][file];
+				Piece piece = pos.getPiece();
+				if (piece != null) {
+					String val = piece.getValue();
+					row += " " + val + " ";
+				} else {
+					row += " " + "-" + " ";
+				}
+			}
+			table += row + " |" + ranks.get(rank).toString() + "\n";
+		}
+		table += "  --------------------------\n";
+
+		table += header + "\n";
+		table += "            " + p2.getColor() + "\n";
+		table += "            " + p2.getName() + "\n + \n";
+		table+= "Pieces captured by "+p1.getName()+": ";
+		for (Piece piece: captured_p1) {
+			table +=piece.getValue()+" ";
+		}
+		table+="\n";
+		table+= "Pieces captured by "+p2.getName()+": ";
+		for (Piece piece: captured_p2) {
+			table += piece.getValue()+"\n";
+		}
+		table += "\n";
+		return table;
 	}
 
 	public boolean legalPiece(Piece piece, Player p) {
@@ -181,89 +276,21 @@ public class Game {
 
 		Position init_pos = move.getStart();
 		Position dest_pos = move.getEnd();
+		Piece cap = dest_pos.getPiece();
+		if (cap.getPlayer()== p2) {
+			capturePiece(captured_p1, cap);
+			
+		if (cap.getPlayer() == p1) {
+			capturePiece(captured_p2, cap);
+			}
+		}
+		System.out.println(cap.getPlayer().getName());
 		dest_pos.getPiece().setValue(init_pos.getPiece().getValue());
 		dest_pos.getPiece().setPlayer(player);
 		init_pos.getPiece().setValue("-");
 		init_pos.getPiece().setPlayer(null);
-
-	}
-	
-	public void createBoard() {
 		
-		List<String> setup = board.getSetup();
-		for (int rank = 0; rank < 8; rank++) {
-			for (int file = 0; file < 8; file++) {
-				Piece piece = new Piece();
-				Position pos = new Position(rank, file, piece);
 
-				if (rank == 0 || rank == 7) {
-					piece.setValue(setup.get(file));
-
-					pos = new Position(rank, file, piece);
-				} else {
-					if (rank == 1 || rank == 6) {
-						piece.setValue("p");
-						pos = new Position(rank, file, piece);
-					} else {
-						piece.setValue("-");
-						pos = new Position(rank, file, piece);
-					}
-				}
-				if (rank < 2) {
-					piece.setPlayer(p1);
-					piece.setValue(piece.getValue().toUpperCase());
-				}
-
-				if (rank > 5) {
-					piece.setPlayer(p2);
-					piece.setValue(piece.getValue().toLowerCase());
-				}
-
-				if (rank >= 2 && rank <= 5) {
-					piece.setPlayer(p3);
-				}
-				board.getPositions()[rank][file] = pos;
-			}
-		}
-
-	}
-	
-	public String loadBoard() {
-
-		List<Character> files = board.getFiles();
-		List<Character> ranks = board.getRanks();
-
-		String table = "";
-		String header = "   ";
-		for (Character file : files) {
-			header += " " + file.toString() + " ";
-		}
-		table += "           " + p1.getName() + "\n";
-		table += "           " + p1.getColor() + "\n";
-		System.out.println();
-		table += header + " \n";
-		table += "  --------------------------\n";
-		for (int rank = 0; rank < 8; rank++) {
-			String row = ranks.get(rank).toString() + "| ";
-			for (int file = 0; file < 8; file++) {
-				Position pos = board.getPositions()[rank][file];
-				Piece piece = pos.getPiece();
-				if (piece != null) {
-					String val = piece.getValue();
-					row += " " + val + " ";
-				} else {
-					row += " " + "-" + " ";
-				}
-			}
-			table += row + " |" + ranks.get(rank).toString() + "\n";
-		}
-		table += "  --------------------------\n";
-
-		table += header + "\n";
-		table += "            " + p2.getColor() + "\n";
-		table += "            " + p2.getName() + "\n + \n";
-		
-		return table;
 	}
 
 }
