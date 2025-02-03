@@ -95,33 +95,108 @@ public class Board {
 		return legal;
 	}
 
+	public boolean legalRook(Position init_pos, Position dest_pos, Player p) {
+		boolean legal = true;
+		String warning = "";
+
+		if (init_pos.getFile() != dest_pos.getFile() && init_pos.getRank() != dest_pos.getRank()) {
+			warning = "The rook can only move along the same file or rank!";
+			legal = false;
+		}
+
+		for (int rank = init_pos.getRank(); rank < dest_pos.getRank(); rank++) {
+			for (int file = init_pos.getFile(); file < dest_pos.getFile(); file++) {
+				Position test_pos = positions[file][rank];
+
+				if (test_pos.getPiece().getValue() != "-") {
+					legal = false;
+					warning = "The rook cannot skip over pieces!";
+				}
+			}
+		}
+
+		if (legal == false) {
+			System.out.println(warning);
+		}
+		return legal;
+	}
+
+	public boolean legalBishop(Position init_pos, Position dest_pos, Player p) {
+		boolean legal = true;
+		String warning = "";
+		String bis = "";
+
+		if (init_pos.getFile() == dest_pos.getFile() || init_pos.getRank() == dest_pos.getRank()) {
+			warning = "The bishop can only move diagonally! \n";
+			legal = false;
+		}
+		
+		for (int rank = init_pos.getRank(); rank < dest_pos.getRank(); rank++) {
+			for (int file = init_pos.getFile(); file < dest_pos.getFile(); file++) {
+				Position test_pos = positions[file][rank];
+
+				if (test_pos.getPiece().getValue().equals("-")) {
+					
+				}
+				else {
+					legal = false;
+					bis = "The bishop cannot skip over pieces!";
+				}
+			}
+		}
+		warning+=bis;
+
+		if (legal == false) {
+			System.out.println(warning);
+		}
+		return legal;
+	}
+	
+	public boolean legalKnight(Position init_pos, Position dest_pos, Player p) {
+		boolean legal = true;
+		String warning = "";
+		int file = init_pos.getFile();
+		int rank = init_pos.getRank();
+		if ((dest_pos.getFile()-file==2)&&(dest_pos.getRank()-rank == 1)||(dest_pos.getFile()-file==1)&&(dest_pos.getRank()-rank == 2)) {
+		}
+		else {
+			legal = false;
+		}
+		
+		if (legal == false) {
+			System.out.println(warning);
+		}
+		return legal;
+	}
+
 	public boolean legalMove(Position init_pos, Position dest_pos, Player p) {
 		boolean legal = true;
+		String warning = "";
 		Piece piece = init_pos.getPiece();
-		String val = piece.getValue().toLowerCase();
+		String val = piece.getValue().toLowerCase().trim();
+		String bishop = "b";
+		String rook = "r";
+		String knight = "n";
+		
+		if (val.equals(rook)) {
+			legal = legalRook(init_pos, dest_pos, p); 
+			}
+		
+		if (val.equals(bishop)) {
+			legal = legalBishop(init_pos, dest_pos, p); 
+			}
+		
+		if (val.equals(knight)) {
+			legal = legalKnight(init_pos, dest_pos, p); 
+			}
 		
 		if (dest_pos.getPiece().getPlayer() == p) {
 			legal = false;
-			System.out.println("You cannot take one of your pieces!");
-			System.out.println("Choose another cell: ");
+			warning += "You cannot take one of your pieces! \n";
 		}
-		switch (val) {
-			case "b": {
-				if (init_pos.getFile() == dest_pos.getFile() || init_pos.getRank() == dest_pos.getRank()) {
-					System.out.println("The bishop can only move diagonally!");
-					System.out.println("Choose another cell: ");
-					legal = false;
-				}
-			}	
-		
-		
-		case "r": {
-			if (init_pos.getFile() != dest_pos.getFile() && init_pos.getRank() != dest_pos.getRank()) {
-				System.out.println("The rook can only move along the same file or rank!");
-				System.out.println("Choose another cell: ");
-				legal = false;
-			}
-		}	
+
+		if (legal == false) {
+			System.out.println(warning);
 		}
 		return legal;
 

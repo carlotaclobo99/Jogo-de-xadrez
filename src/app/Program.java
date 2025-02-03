@@ -33,7 +33,7 @@ public class Program {
 
 				if (rank == 0 || rank == 7) {
 					piece.setValue(setup.get(file));
-					System.out.println(setup.get(file));
+
 					pos = new Position(rank, file, piece);
 				} else {
 					if (rank == 1 || rank == 6) {
@@ -61,19 +61,13 @@ public class Program {
 				board.getPositions()[rank][file] = pos;
 			}
 		}
-		
-		for (int i = 0; i<8; i++) {
-			for (int j = 0; j<8; j++) {
-				System.out.println(aux[i][j].getPiece());
-				
-			}
-		}
 
 		System.out.println("Creating new board:" + "\n");
 
 		System.out.println(board.loadBoard());
 		System.out.println();
 		String check = "";
+		Player winner;
 
 		for (int i = 0; i < 3; i++) {
 			for (Player p : players) {
@@ -88,7 +82,6 @@ public class Program {
 				Position current = board.getPositions()[ranks.indexOf(rank)][files.indexOf(file)];
 
 				while (board.legalPiece(current.getPiece(), p)!=true) {
-					
 					move = sc.next();
 					file = (char) move.charAt(0);
 					rank = (char) move.charAt(1);
@@ -100,18 +93,31 @@ public class Program {
 				Character file1 = move1.charAt(0);
 				Character rank1 = move1.charAt(1);
 				Position new_pos = board.getPositions()[ranks.indexOf(rank1)][files.indexOf(file1)];
-
+				
 				while (board.legalMove(current, new_pos, p)!=true) {
-					
+
+					System.out.println("Choose another cell: ");
 					move1 = sc.next();
 					file1 = move1.charAt(0);
 					rank1 = move1.charAt(1);
 					new_pos = board.getPositions()[ranks.indexOf(rank1)][files.indexOf(file1)];
+				
 				}
+				
+				if (current.getPiece().getValue().toLowerCase() == "r") {
+					System.out.println("Teste");
+					board.legalRook(current, new_pos, p);
+				}
+				
+				if (current.getPiece().getValue().toLowerCase() == "b") {
+					board.legalBishop(current, new_pos, p);
+				}
+
 
 				if (new_pos.getPiece().getValue() == "K") {
 					System.out.println("Check-mate!");
 					check = "Yes";
+					winner = p;
 					break;
 				}
 				
