@@ -322,6 +322,17 @@ public class Game {
 		
 
 	}
+	
+	public boolean validInput(String input) {
+		boolean valid = true;
+		if (input.length()!=2 && !input.equals("back")) {
+			valid = false;
+		}
+		if (valid == false) {
+			System.out.println("Invalid input!");
+		}
+		return valid;
+	}
 
 }
 

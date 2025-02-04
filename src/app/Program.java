@@ -26,149 +26,314 @@ public class Program {
 		System.out.println("Creating new board:" + "\n");
 		System.out.println(game.loadBoard());
 		System.out.println();
-		String stop = "";
 		String check = "";
 		Player winner = pnone;
-
 		while (check != "y") {
 			for (Player p : players) {
 
 				System.out.print(p.getName() + "'s turn, ");
 				System.out.println(p.getColor() + " to move:");
-				//Choose starting piece:
-				String play = sc.next();
+				//
+				//
+				//
+				// Choose starting piece:
+				//
+				//
+				//
+				// Choose starting piece:
+				String start = sc.next();
+				// Check if input is valid:
+				// Check if position exists:
+				Character start_file = (char) start.charAt(0);
+				Character start_rank = (char) start.charAt(1);
+				while (!board.getFiles().contains(start_file) || !board.getRanks().contains(start_rank)) {
+					System.out.println("Invalid input! Please try again: ");
+					start = sc.next();
 
-				// Skip your turn;
-				if (play.equals("s")) {
-					continue;
+					// Check if input is valid
+					while (game.validInput(start) != true) {
+						System.out.println("Try again: ");
+						start = sc.next();
+					}
+
+					start_file = (char) start.charAt(0);
+					start_rank = (char) start.charAt(1);
 				}
-				Character file = (char) play.charAt(0);
-				Character rank = (char) play.charAt(1);
 
-				Position current = board.getPositions()[board.getRanks().indexOf(rank)][board.getFiles().indexOf(file)];
+				Position current = board.getPositions()[board.getRanks().indexOf(start_rank)][board.getFiles()
+						.indexOf(start_file)];
 
-				//Check if piece is legal:
+				// Check if piece is legal:
 				while (game.legalPiece(current.getPiece(), p) != true) {
-					play = sc.next();
-					if (play.equals("s")) {
-						stop = "y";
-						break;
+					// Choose until its not:
+					start = sc.next();
+					// Check if input is valid
+					while (game.validInput(start) != true) {
+						System.out.println("Try again: ");
+						start = sc.next();
 					}
-					file = (char) play.charAt(0);
-					rank = (char) play.charAt(1);
-					current = board.getPositions()[board.getRanks().indexOf(rank)][board.getFiles().indexOf(file)];
-				}
-				
-				if (stop.equals("y")) {
-					continue;
-				}
-				//If legal, choose either to move or change the starting piece:
-				System.out.println("Moving to: ");
-				String move1 = sc.next();
-				while (move1.equals("back")) {
-					System.out.println("Choose starting piece again: ");
-					
-					//Choose starting piece:
-					play = sc.next();
-					if (play.equals("s")) {
-						stop = "y";
-						break;
-					}
-					file = (char) play.charAt(0);
-					rank = (char) play.charAt(1);
 
-					current = board.getPositions()[board.getRanks().indexOf(rank)][board.getFiles().indexOf(file)];
-					
-					//Check if chosen piece is legal:
-					while (game.legalPiece(current.getPiece(), p) != true) {
-						play = sc.next();
-						if (play.equals("s")) {
-							stop = "y";
-							break;
+					// Check if position exists:
+					start_file = (char) start.charAt(0);
+					start_rank = (char) start.charAt(1);
+					while (!board.getFiles().contains(start_file) || !board.getRanks().contains(start_rank)) {
+						System.out.println("Invalid input! Please try again: ");
+						start = sc.next();
+
+						// Check if input is valid
+						while (game.validInput(start) != true) {
+							System.out.println("Try again: ");
+							start = sc.next();
 						}
-						file = (char) play.charAt(0);
-						rank = (char) play.charAt(1);
-						current = board.getPositions()[board.getRanks().indexOf(rank)][board.getFiles().indexOf(file)];
 
+						start_file = (char) start.charAt(0);
+						start_rank = (char) start.charAt(1);
 					}
-					if (stop.equals("y")) {
-						break;
+
+				}
+
+				// Set current position:
+				current = board.getPositions()[board.getRanks().indexOf(start_rank)][board.getFiles()
+						.indexOf(start_file)];
+
+				//
+				//
+				// If legal, choose either to move or change the starting piece:
+				//
+				//
+				System.out.println("Moving to: ");
+				String end = sc.next();
+				// Check if input is valid
+				while (game.validInput(end) != true) {
+					System.out.println("Try again: ");
+					end = sc.next();
+				}
+				if (!end.equals("back")) {
+					// Check if position exists:
+					Character end_file = (char) end.charAt(0);
+					Character end_rank = (char) end.charAt(1);
+					while (!board.getFiles().contains(end_file) || !board.getRanks().contains(end_rank)) {
+						System.out.println("Invalid input! Please try again: ");
+						end = sc.next();
+
+						// Check if input is valid
+						while (game.validInput(end) != true) {
+							System.out.println("Try again: ");
+							end = sc.next();
+						}
+
+						end_file = (char) end.charAt(0);
+						end_rank = (char) end.charAt(1);
+					}
+				}
+				// Choose to go back and choose starting piece again:
+				while (end.equals("back")) {
+					System.out.println("Choose starting piece again: ");
+
+					// Choose starting piece:
+					start = sc.next();
+					// Check if input is valid
+					while (game.validInput(start) != true) {
+						System.out.println("Try again: ");
+						start = sc.next();
+					}
+
+					// Check if position exists:
+					start_file = (char) start.charAt(0);
+					start_rank = (char) start.charAt(1);
+					while (!board.getFiles().contains(start_file) || !board.getRanks().contains(start_rank)) {
+						System.out.println("Invalid input! Please try again: ");
+						start = sc.next();
+
+						// Check if input is valid
+						while (game.validInput(start) != true) {
+							System.out.println("Try again: ");
+							start = sc.next();
+						}
+
+						start_file = (char) start.charAt(0);
+						start_rank = (char) start.charAt(1);
+					}
+
+					current = board.getPositions()[board.getRanks().indexOf(start_rank)][board.getFiles()
+							.indexOf(start_file)];
+
+					// Check if piece is legal:
+					while (game.legalPiece(current.getPiece(), p) != true) {
+						// Choose starting piece until its legal:
+						start = sc.next();
+						// Check if input is valid
+						while (game.validInput(start) != true) {
+							System.out.println("Try again: ");
+							start = sc.next();
+						}
+						// Check if position exists:
+						start_file = (char) start.charAt(0);
+						start_rank = (char) start.charAt(1);
+						while (!board.getFiles().contains(start_file) || !board.getRanks().contains(start_rank)) {
+							System.out.println("Invalid input! Please try again: ");
+							start = sc.next();
+
+							// Check if input is valid
+							while (game.validInput(start) != true) {
+								System.out.println("Try again: ");
+								start = sc.next();
+							}
+
+							start_file = (char) start.charAt(0);
+							start_rank = (char) start.charAt(1);
+						}
+
 					}
 					System.out.println("Moving to: ");
-					move1 = sc.next();
-					if (move1.equals("s")) {
-						stop = "y";
-						break;
-						
+					end = sc.next();
+					// Check if input is valid
+					while (game.validInput(end) != true) {
+						System.out.println("Try again: ");
+						end = sc.next();
 					}
-					if (!move1.equals("back")) {
+					if (!end.equals("back")) {
 						break;
 					}
 
 				}
-				if (play.equals("s")) {
-					continue;
+				current = board.getPositions()[board.getRanks().indexOf(start_rank)][board.getFiles()
+						.indexOf(start_file)];
+
+				// Check if position exists:
+				Character end_file = (char) end.charAt(0);
+				Character end_rank = (char) end.charAt(1);
+				while (!board.getFiles().contains(end_file) || !board.getRanks().contains(end_rank)) {
+					System.out.println("Invalid input! Please try again: ");
+					end = sc.next();
+
+					// Check if input is valid
+					while (game.validInput(end) != true) {
+						System.out.println("Try again: ");
+						end = sc.next();
+					}
+
+					end_file = (char) end.charAt(0);
+					end_rank = (char) end.charAt(1);
 				}
-				Character file1 = move1.charAt(0);
-				Character rank1 = move1.charAt(1);
-				Position new_pos = board.getPositions()[board.getRanks().indexOf(rank1)][board.getFiles()
-						.indexOf(file1)];
+
+				Position new_pos = board.getPositions()[board.getRanks().indexOf(end_rank)][board.getFiles()
+						.indexOf(end_file)];
 				Move move = new Move(current, new_pos);
 				
-				//Check if move is legal:
+				//
+				//
+				//
+				// Check if move is legal:
+				//
+				//
+				//
 				while (game.legalMove(move, p) == false) {
 
-					move1 = sc.next();
-					//If not, decide to change the move or go back to the start:
-					while (move1.equals("back")) {
+					end = sc.next();
+					// Check if input is valid
+					while (game.validInput(end) != true) {
+						System.out.println("Try again: ");
+						end = sc.next();
+					}
+					// If not, decide to change the move or go back to the start:
+
+					// Choose to go back and choose starting piece again:
+					while (end.equals("back")) {
 						System.out.println("Choose starting piece again: ");
 
-						play = sc.next();
-						if (play.equals("s")) {
-							stop = "y";
-							break;
+						// Choose starting piece:
+						start = sc.next();
+						// Check if input is valid
+						while (game.validInput(start) != true) {
+							System.out.println("Try again: ");
+							start = sc.next();
 						}
-						file = (char) play.charAt(0);
-						rank = (char) play.charAt(1);
 
-						current = board.getPositions()[board.getRanks().indexOf(rank)][board.getFiles().indexOf(file)];
+						// Check if position exists:
+						start_file = (char) start.charAt(0);
+						start_rank = (char) start.charAt(1);
+						while (!board.getFiles().contains(start_file) || !board.getRanks().contains(start_rank)) {
+							System.out.println("Invalid input! Please try again: ");
+							start = sc.next();
 
-						while (game.legalPiece(current.getPiece(), p) != true) {
-							play = sc.next();
-							if (play.equals("s")) {
-								stop = "y";
-								break;
+							// Check if input is valid
+							while (game.validInput(start) != true) {
+								System.out.println("Try again: ");
+								start = sc.next();
 							}
-							file = (char) play.charAt(0);
-							rank = (char) play.charAt(1);
-							current = board.getPositions()[board.getRanks().indexOf(rank)][board.getFiles()
-									.indexOf(file)];
+							start_file = (char) start.charAt(0);
+							start_rank = (char) start.charAt(1);
+						}
+
+						current = board.getPositions()[board.getRanks().indexOf(start_rank)][board.getFiles()
+								.indexOf(start_file)];
+
+						// Check if piece is legal:
+						while (game.legalPiece(current.getPiece(), p) != true) {
+							// Choose starting piece until its legal:
+							start = sc.next();
+							// Check if input is valid
+							while (game.validInput(start) != true) {
+								System.out.println("Try again: ");
+								start = sc.next();
+							}
+
+							// Check if position exists:
+							start_file = (char) start.charAt(0);
+							start_rank = (char) start.charAt(1);
+							while (!board.getFiles().contains(start_file) || !board.getRanks().contains(start_rank)) {
+								System.out.println("Invalid input! Please try again: ");
+								start = sc.next();
+
+								// Check if input is valid
+								while (game.validInput(start) != true) {
+									System.out.println("Try again: ");
+									start = sc.next();
+								}
+
+								start_file = (char) start.charAt(0);
+								start_rank = (char) start.charAt(1);
+							}
 
 						}
 						System.out.println("Moving to: ");
-						move1 = sc.next();
-						if (play.equals("s")) {
-							stop = "y";
-							break;
+						end = sc.next();
+						// Check if input is valid
+						while (game.validInput(end) != true) {
+							System.out.println("Try again: ");
+							end = sc.next();
 						}
-						if (!move1.equals("back")) {
+						if (!end.equals("back")) {
+							// Check if position exists:
+							end_file = (char) end.charAt(0);
+							end_rank = (char) end.charAt(1);
+							while (!board.getFiles().contains(end_file) || !board.getRanks().contains(end_rank)) {
+								System.out.println("Invalid input! Please try again: ");
+								end = sc.next();
+
+								// Check if input is valid
+								while (game.validInput(end) != true) {
+									System.out.println("Try again: ");
+									end = sc.next();
+								}
+
+								end_file = (char) end.charAt(0);
+								end_rank = (char) end.charAt(1);
+							}
 							break;
 						}
 
 					}
-					
-					if (stop.equals("y")) {
-						break;
-					}
+					current = board.getPositions()[board.getRanks().indexOf(start_rank)][board.getFiles()
+							.indexOf(start_file)];
 
-					file1 = move1.charAt(0);
-					rank1 = move1.charAt(1);
-					new_pos = board.getPositions()[board.getRanks().indexOf(rank1)][board.getFiles().indexOf(file1)];
+					// Or change the move:
+					end_file = end.charAt(0);
+					end_rank = end.charAt(1);
+					new_pos = board.getPositions()[board.getRanks().indexOf(end_rank)][board.getFiles()
+							.indexOf(end_file)];
 					move = new Move(current, new_pos);
-				}
-				
-				if (stop.equals("y")) {
-					continue;
 				}
 
 				if (new_pos.getPiece().getValue().toUpperCase() == "K") {
@@ -182,6 +347,8 @@ public class Program {
 				System.out.println(game.loadBoard());
 
 			}
+
+			// If a winner is declared, the game stops.
 			if (check == "y") {
 				System.out.println("The winner is: " + winner + "!");
 				break;
@@ -189,7 +356,7 @@ public class Program {
 			}
 		}
 
+		// Close scanner;
 		sc.close();
 	}
-
 }
