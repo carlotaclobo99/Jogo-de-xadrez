@@ -216,7 +216,7 @@ public class Game {
 		}
 		return legal;
 	}
-	
+
 	public boolean legalPawn(Move move, Player p) {
 		boolean legal = true;
 		Position init_pos = move.getStart();
@@ -224,35 +224,34 @@ public class Game {
 		String warning = "";
 		int file = init_pos.getFile();
 		int rank = init_pos.getRank();
-		if (rank == 1) {
-			if (Math.abs(dest_pos.getRank()-rank)> 2 || file!=dest_pos.getFile()) {
+		if (rank == 1 || rank == 7) {
+			if (Math.abs(dest_pos.getRank() - rank) > 2 || file != dest_pos.getFile()) {
 				legal = false;
 				warning += "The pawn can only move up to two cells forward! \n";
 			}
-		}
-		else {
-			if (Math.abs(dest_pos.getRank()-rank)> 1 || file!=dest_pos.getFile()) {
+		} else {
+			if (Math.abs(dest_pos.getRank() - rank) > 1 || file != dest_pos.getFile()) {
 				legal = false;
 				warning += "The pawn can only move one cell forward! \n";
 
 			}
 		}
 		if (p == p1) {
-			if (dest_pos.getRank()<rank) {
+			if (dest_pos.getRank() < rank) {
 				legal = false;
-				warning+="The pawn can only move forward!";
+				warning += "The pawn can only move forward!";
 			}
 		}
 		if (p == p2) {
-			if (dest_pos.getRank()>rank) {
+			if (dest_pos.getRank() > rank) {
 				legal = false;
-				warning+="The pawn can only move forward!";
+				warning += "The pawn can only move forward!";
 			}
 		}
 		if (legal == false) {
 			System.out.println(warning);
 		}
-		
+
 		return legal;
 	}
 
@@ -289,18 +288,18 @@ public class Game {
 			}
 		}
 		if (val.equals("r")) {
-			if (start.getRank()==end.getRank()) {
-				for (int i = 0; i<range_files; i++) {
-					Piece p = board.getPositions()[start.getRank()][start.getFile()+i].getPiece();
-					if (p.getPlayer()!=null) {
+			if (start.getRank() == end.getRank()) {
+				for (int i = 0; i < range_files; i++) {
+					Piece p = board.getPositions()[start.getRank()][start.getFile() + i].getPiece();
+					if (p.getPlayer() != null) {
 						legal = false;
 					}
 				}
 			}
-			if (start.getFile()==end.getFile()) {
-				for (int i = 0; i<range_ranks; i++) {
-					Piece p = board.getPositions()[start.getRank()+i][start.getFile()].getPiece();
-					if (p.getPlayer()!=null) {
+			if (start.getFile() == end.getFile()) {
+				for (int i = 0; i < range_ranks; i++) {
+					Piece p = board.getPositions()[start.getRank() + i][start.getFile()].getPiece();
+					if (p.getPlayer() != null) {
 						legal = false;
 					}
 				}
@@ -341,7 +340,7 @@ public class Game {
 		if (val.equals(pawn)) {
 			legal_piece = legalPawn(move, p);
 		}
-		
+
 		legal_move = legalTake(move, p);
 		legal_skip = legalSkip(move);
 
@@ -364,10 +363,9 @@ public class Game {
 		String val = cap.getValue();
 		if (player == p1 && cap.getPlayer() != null) {
 			captured_p1.add(new Piece(val, null));
-
-			if (player == p2 && cap.getPlayer() != null) {
-				captured_p2.add(new Piece(val, null));
-			}
+		}
+		if (player == p2 && cap.getPlayer() != null) {
+			captured_p2.add(new Piece(val, null));
 		}
 		dest_pos.setPiece(init_pos.getPiece());
 		init_pos.setPiece(new Piece("-", null));
@@ -376,7 +374,7 @@ public class Game {
 
 	public boolean validInput(String input) {
 		boolean valid = true;
-		if (input.length() != 2 && !input.equals("back")) {
+		if (input.length() != 2) {
 			valid = false;
 		}
 		if (valid == false) {

@@ -15,7 +15,9 @@ public class Program {
 	public static void main(String[] args) {
 
 		Scanner sc = new Scanner(System.in);
-
+		List<String> choices = new ArrayList<String>();
+		choices.add("y");
+		choices.add("n");
 		Player p1 = new Player("Maria", "white");
 		Player p2 = new Player("Sara", "black");
 		Player pnone = null;
@@ -42,8 +44,7 @@ public class Program {
 				//
 				// Choose starting piece:
 				String start = sc.next();
-				// Check if input is valid:
-				// Check if position exists:
+				// Check if input is valid and if position exists:
 				Character start_file = (char) start.charAt(0);
 				Character start_rank = (char) start.charAt(1);
 				while (!board.getFiles().contains(start_file) || !board.getRanks().contains(start_rank)) {
@@ -103,8 +104,12 @@ public class Program {
 				String end = null;
 				Character end_file = null;
 				Character end_rank = null;
-				System.out.println("Go back and change starting piece (y/n)");
+				System.out.print("Go back and change starting piece? (y/n)");
 				String back = sc.next();
+				while (!choices.contains(back)) {
+					System.out.print("Choose y or n:");
+					back = sc.next();
+				}
 
 				if (back.equals("n")) {
 					// Check if position exists:
@@ -190,6 +195,10 @@ public class Program {
 					}
 					System.out.println("Go back (y/n)?");
 					back = sc.next();
+					while (!choices.contains(back)) {
+						System.out.print("Choose y or n:");
+						back = sc.next();
+					}
 					if (back.equals("n")) {
 						// Check if position exists:
 						System.out.println("Moving to: ");
@@ -226,11 +235,15 @@ public class Program {
 				//
 				while (game.legalMove(move, p) == false) {
 					System.out.println("Illegal move! Go back to start (y/n)?");
-					 back = sc.next();
+					back = sc.next();
+					while (!choices.contains(back)) {
+						System.out.print("Choose y or n:");
+						back = sc.next();
+					}
 
 					if (back.equals("n")) {
 						// Check if position exists:
-						System.out.println("Moving to: ");
+						System.out.println("Choose a different move: ");
 						end = sc.next();
 						end_file = (char) end.charAt(0);
 						end_rank = (char) end.charAt(1);
@@ -312,6 +325,10 @@ public class Program {
 						}
 						System.out.println("Go back (y/n)?");
 						back = sc.next();
+						while (!choices.contains(back)) {
+							System.out.print("Choose y or n:");
+							back = sc.next();
+						}
 						if (back.equals("n")) {
 							// Check if position exists:
 							System.out.println("Moving to: ");
@@ -336,9 +353,9 @@ public class Program {
 						}
 					}
 
-					 new_pos = board.getPositions()[board.getRanks().indexOf(end_rank)][board.getFiles()
+					new_pos = board.getPositions()[board.getRanks().indexOf(end_rank)][board.getFiles()
 							.indexOf(end_file)];
-					 move = new Move(current, new_pos);
+					move = new Move(current, new_pos);
 
 				}
 				game.movePiece(move, p);
