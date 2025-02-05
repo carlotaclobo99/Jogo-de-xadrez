@@ -10,7 +10,7 @@ import entities.Move;
 import entities.Player;
 import entities.Position;
 
-public class Program {
+public class Program3 {
 
 	public static void main(String[] args) {
 
@@ -100,18 +100,15 @@ public class Program {
 				// If legal, choose either to move or change the starting piece:
 				//
 				//
-				String end = null;
-				Character end_file = null;
-				Character end_rank = null;
 				System.out.println("Go back and change starting piece (y/n)");
 				String back = sc.next();
 
 				if (back.equals("n")) {
 					// Check if position exists:
 					System.out.println("Moving to: ");
-					end = sc.next();
-					end_file = (char) end.charAt(0);
-					end_rank = (char) end.charAt(1);
+					String end = sc.next();
+					Character end_file = (char) end.charAt(0);
+					Character end_rank = (char) end.charAt(1);
 					while (!board.getFiles().contains(end_file) || !board.getRanks().contains(end_rank)) {
 						System.out.println("Invalid input! Please try again: ");
 						end = sc.next();
@@ -191,27 +188,13 @@ public class Program {
 					System.out.println("Go back (y/n)?");
 					back = sc.next();
 					if (back.equals("n")) {
-						// Check if position exists:
-						System.out.println("Moving to: ");
-						end = sc.next();
-						end_file = (char) end.charAt(0);
-						end_rank = (char) end.charAt(1);
-						while (!board.getFiles().contains(end_file) || !board.getRanks().contains(end_rank)) {
-							System.out.println("Invalid input! Please try again: ");
-							end = sc.next();
-
-							// Check if input is valid
-							while (game.validInput(end) != true) {
-								System.out.println("Try again: ");
-								end = sc.next();
-							}
-
-							end_file = (char) end.charAt(0);
-							end_rank = (char) end.charAt(1);
-						}
-
 						break;
 					}
+
+					if (back.equals("n")) {
+						break;
+					}
+
 				}
 
 				Position new_pos = board.getPositions()[board.getRanks().indexOf(end_rank)][board.getFiles()
@@ -226,28 +209,27 @@ public class Program {
 				//
 				while (game.legalMove(move, p) == false) {
 					System.out.println("Illegal move! Go back to start (y/n)?");
-					 back = sc.next();
+					back = sc.next();
 
-					if (back.equals("n")) {
-						// Check if position exists:
-						System.out.println("Moving to: ");
+					// Check if position exists:
+					System.out.println("Moving to: ");
+					end = sc.next();
+					end_file = (char) end.charAt(0);
+					end_rank = (char) end.charAt(1);
+					while (!board.getFiles().contains(end_file) || !board.getRanks().contains(end_rank)) {
+						System.out.println("Invalid input! Please try again: ");
 						end = sc.next();
+
+						// Check if input is valid
+						while (game.validInput(end) != true) {
+							System.out.println("Try again: ");
+							end = sc.next();
+						}
+
 						end_file = (char) end.charAt(0);
 						end_rank = (char) end.charAt(1);
-						while (!board.getFiles().contains(end_file) || !board.getRanks().contains(end_rank)) {
-							System.out.println("Invalid input! Please try again: ");
-							end = sc.next();
-
-							// Check if input is valid
-							while (game.validInput(end) != true) {
-								System.out.println("Try again: ");
-								end = sc.next();
-							}
-
-							end_file = (char) end.charAt(0);
-							end_rank = (char) end.charAt(1);
-						}
 					}
+
 					// Choose to go back and choose starting piece again:
 					while (back.equals("y")) {
 						System.out.println("Choose starting piece again: ");
@@ -313,33 +295,31 @@ public class Program {
 						System.out.println("Go back (y/n)?");
 						back = sc.next();
 						if (back.equals("n")) {
-							// Check if position exists:
-							System.out.println("Moving to: ");
-							end = sc.next();
-							end_file = (char) end.charAt(0);
-							end_rank = (char) end.charAt(1);
-							while (!board.getFiles().contains(end_file) || !board.getRanks().contains(end_rank)) {
-								System.out.println("Invalid input! Please try again: ");
-								end = sc.next();
-
-								// Check if input is valid
-								while (game.validInput(end) != true) {
-									System.out.println("Try again: ");
-									end = sc.next();
-								}
-
-								end_file = (char) end.charAt(0);
-								end_rank = (char) end.charAt(1);
-							}
-
 							break;
 						}
 					}
+					// Check if position exists:
+					System.out.println("Moving to2: ");
+					end = sc.next();
+					end_file = (char) end.charAt(0);
+					end_rank = (char) end.charAt(1);
+					while (!board.getFiles().contains(end_file) || !board.getRanks().contains(end_rank)) {
+						System.out.println("Invalid input! Please try again: ");
+						end = sc.next();
 
-					 new_pos = board.getPositions()[board.getRanks().indexOf(end_rank)][board.getFiles()
+						// Check if input is valid
+						while (game.validInput(end) != true) {
+							System.out.println("Try again: ");
+							end = sc.next();
+						}
+
+						end_file = (char) end.charAt(0);
+						end_rank = (char) end.charAt(1);
+
+					}
+					new_pos = board.getPositions()[board.getRanks().indexOf(end_rank)][board.getFiles()
 							.indexOf(end_file)];
-					 move = new Move(current, new_pos);
-
+					move = new Move(current, new_pos);
 				}
 				game.movePiece(move, p);
 				System.out.println(game.loadBoard());
