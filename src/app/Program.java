@@ -197,6 +197,7 @@ public class Program {
 					game.promotion(new_pos.getPiece());
 				}
 				game.movePiece(move, p);
+
 				System.out.println(game.loadBoard());
 			}
 			

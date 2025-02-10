@@ -1,9 +1,10 @@
 package entities;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Scanner;
+import java.util.Set;
 
 public class Game {
 
@@ -165,15 +166,18 @@ public class Game {
 		return legal;
 	}
 
-	public List<Position> legalRook(Position position, Player p) {
+	public List<Position> legalKing(Position position, Player p) {
 		List<Position> legal_moves = new ArrayList<>();
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 8; j++) {
-				Position pos = board.getPositions()[i][j];
-				if (pos.getPiece().getPlayer() == p) {
-
-				} else {
-
+		int file = position.getFile();
+		int rank = position.getRank();
+		for (int i = -1; i < 2; i++) {
+			for (int j = -1; j < 2; j++) {
+				try {
+					Position pos = board.getPositions()[rank + i][file + j];
+					if (pos.getPiece().getPlayer() == null) {
+						legal_moves.add(pos);
+					}
+				} catch (ArrayIndexOutOfBoundsException e) {
 				}
 			}
 		}
@@ -181,8 +185,86 @@ public class Game {
 		return legal_moves;
 	}
 
+	public List<Position> legalRook(Position position, Player p) {
+		List<Position> legal_moves = new ArrayList<>();
+		int file = position.getFile();
+		int rank = position.getRank();
+		for (int i = -7; i < 8; i++) {
+			for (int j = -7; j < 8; j++) {
+				try {
+					Position pos = board.getPositions()[rank + i][file + j];
+					if ((i == 0) || (j == 0)) {
+						if (pos.getPiece().getPlayer() == null) {
+							legal_moves.add(pos);
+						}
+
+					}
+
+				}
+
+				catch (ArrayIndexOutOfBoundsException e) {
+				}
+			}
+		}
+
+		return legal_moves;
+	}
+
+	public boolean smallCastling(Player p) {
+		boolean legal = false;
+		int rank = 7;
+		if (p == p1) {
+			rank = 0;
+		}
+		Piece king = board.getPositions()[rank][4].getPiece();
+		Piece rook = board.getPositions()[rank][7].getPiece();
+		if (board.getPositions()[rank][5].getPiece().getValue().equals("-")
+				|| board.getPositions()[rank][6].getPiece().getValue().equals("-")) {
+			if (king.getNumber_moves() == 0 || rook.getNumber_moves() == 0) {
+				legal = true;
+			}
+		}
+		return legal;
+	}
+
+	public boolean largeCastling(Player p) {
+		boolean legal = false;
+		int rank = 7;
+		if (p == p1) {
+			rank = 0;
+		}
+		Piece king = board.getPositions()[rank][4].getPiece();
+		Piece rook = board.getPositions()[rank][0].getPiece();
+		if (board.getPositions()[rank][1].getPiece().getValue().equals("-")
+				|| board.getPositions()[rank][2].getPiece().getValue().equals("-")
+				|| board.getPositions()[rank][3].getPiece().getValue().equals("-")) {
+			if (king.getNumber_moves() == 0 || rook.getNumber_moves() == 0) {
+				legal = true;
+			}
+		}
+		return legal;
+	}
+
 	public List<Position> legalBishop(Position position, Player p) {
 		List<Position> legal_moves = new ArrayList<>();
+		int file = position.getFile();
+		int rank = position.getRank();
+		for (int i = -7; i < 8; i++) {
+			for (int j = -7; j < 8; j++) {
+				try {
+					Position pos = board.getPositions()[rank + i][file + j];
+					if (Math.abs(i) == Math.abs(j)) {
+						if (pos.getPiece().getPlayer() == null) {
+							legal_moves.add(pos);
+						}
+					}
+
+				}
+
+				catch (ArrayIndexOutOfBoundsException e) {
+				}
+			}
+		}
 
 		return legal_moves;
 	}
@@ -319,11 +401,15 @@ public class Game {
 		String rook = "r";
 		String knight = "n";
 		String pawn = "p";
+		String queen = "q";
+		String king = "k";
 		if (val.equals(pawn)) {
 			legal_moves = legalPawn(position, p);
 		}
 		if (val.equals(rook)) {
 			legal_moves = legalRook(position, p);
+			smallCastling(p);
+			largeCastling(p);
 		}
 		if (val.equals(bishop)) {
 			legal_moves = legalBishop(position, p);
@@ -331,7 +417,15 @@ public class Game {
 		if (val.equals(knight)) {
 			legal_moves = legalKnight(position, p);
 		}
-
+		if (val.equals(queen)) {
+			legal_moves = legalBishop(position, p);
+			legal_moves.addAll(legalRook(position, p));
+			Set<Position> set = new HashSet<>(legal_moves);
+			legal_moves = new ArrayList<>(set);
+		}
+		if (val.equals(king)) {
+			legal_moves = legalKing(position, p);
+		}
 		return legal_moves;
 
 	}
