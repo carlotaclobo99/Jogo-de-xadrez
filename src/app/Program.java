@@ -31,7 +31,7 @@ public class Program {
 		System.out.println(game.loadBoard());
 		System.out.println();
 		String check = "";
-		Player winner = pnone;
+		Player winner = null;
 		Position new_pos = null;
 		while (check != "y") {
 			for (Player p : players) {
@@ -56,12 +56,15 @@ public class Program {
 				while (game.legalPiece(current.getPiece(), p) != true) {
 					// Choose until its not:
 					start = sc.next();
+
 					// Set current position:
+					start_file = (char) start.charAt(0);
+					start_rank = (char) start.charAt(1);
 					current = board.getPositions()[board.getRanks().indexOf(start_rank)][board.getFiles()
 							.indexOf(start_file)];
 				}
 
-				//Check if there are any possible moves:
+				// Check if there are any possible moves:
 				while (game.legalMoves(current, p).isEmpty()) {
 					System.out.println("No valid moves with this piece! Please pick a different one:");
 					// Choose until its not:
@@ -71,6 +74,17 @@ public class Program {
 					// Set current position:
 					current = board.getPositions()[board.getRanks().indexOf(start_rank)][board.getFiles()
 							.indexOf(start_file)];
+
+					while (game.legalPiece(current.getPiece(), p) != true) {
+						// Choose until its not:
+						start = sc.next();
+
+						// Set current position:
+						start_file = (char) start.charAt(0);
+						start_rank = (char) start.charAt(1);
+						current = board.getPositions()[board.getRanks().indexOf(start_rank)][board.getFiles()
+								.indexOf(start_file)];
+					}
 
 				}
 
@@ -99,15 +113,9 @@ public class Program {
 								.indexOf(end_file)];
 					}
 				}
-				
+
 				while (end.equals("b")) {
-					//
-					//
-					//
-					// Choose starting piece:
-					//
-					//
-					System.out.println("Choose a piece to move:");
+					System.out.println("Choose piece to move:");
 					start = sc.next();
 					// Check if input is valid and if position exists:
 					start_file = (char) start.charAt(0);
@@ -120,13 +128,15 @@ public class Program {
 					while (game.legalPiece(current.getPiece(), p) != true) {
 						// Choose until its not:
 						start = sc.next();
+
 						// Set current position:
+						start_file = (char) start.charAt(0);
+						start_rank = (char) start.charAt(1);
 						current = board.getPositions()[board.getRanks().indexOf(start_rank)][board.getFiles()
 								.indexOf(start_file)];
-
 					}
 
-					//Check if there are any possible moves:
+					// Check if there are any possible moves:
 					while (game.legalMoves(current, p).isEmpty()) {
 						System.out.println("No valid moves with this piece! Please pick a different one:");
 						// Choose until its not:
@@ -136,6 +146,18 @@ public class Program {
 						// Set current position:
 						current = board.getPositions()[board.getRanks().indexOf(start_rank)][board.getFiles()
 								.indexOf(start_file)];
+
+						while (game.legalPiece(current.getPiece(), p) != true) {
+							// Choose until its not:
+							start = sc.next();
+
+							// Set current position:
+							start_file = (char) start.charAt(0);
+							start_rank = (char) start.charAt(1);
+							current = board.getPositions()[board.getRanks().indexOf(start_rank)][board.getFiles()
+									.indexOf(start_file)];
+						}
+
 					}
 
 					moves = "";
@@ -143,9 +165,11 @@ public class Program {
 					for (Position pos : legal_moves) {
 						moves += pos.printPos() + " ";
 					}
+
 					System.out.print("Choose your next move or go back: ");
 					System.out.println(moves);
 					end = sc.next();
+					System.out.println();
 					if (!end.equals("b")) {
 						Character end_file = (char) end.charAt(0);
 						Character end_rank = (char) end.charAt(1);
@@ -160,16 +184,28 @@ public class Program {
 							new_pos = board.getPositions()[board.getRanks().indexOf(end_rank)][board.getFiles()
 									.indexOf(end_file)];
 						}
-						break;
 					}
 				}
 
 				Move move = new Move(current, new_pos);
+				if (new_pos.getPiece().getValue().toLowerCase().equals("k")) {
+					winner = p;
+					break;
+				}
+				current.getPiece().setNumber_moves(current.getPiece().getNumber_moves() + 1);
+				if ((new_pos.getRank()==1 || new_pos.getRank()==7) && current.getPiece().getValue().toLowerCase().equals("p")) {
+					game.promotion(new_pos.getPiece());
+				}
 				game.movePiece(move, p);
 				System.out.println(game.loadBoard());
 			}
+			
+			if (winner!=null) {
+				break;
+			}
 
 		}
+		System.out.println(winner.getName()+" is the winner!");
 
 		// Close scanner;
 		sc.close();

@@ -2,6 +2,8 @@ package entities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+import java.util.Scanner;
 
 public class Game {
 
@@ -193,12 +195,11 @@ public class Game {
 			for (int j = -2; j < 3; j++) {
 				if ((Math.abs(i) == 2) && (Math.abs(j) == 1) || (Math.abs(i) == 1) && (Math.abs(j) == 2)) {
 					try {
-						Position pos = board.getPositions()[rank+j][file+i];
-						if (pos.getPiece().getPlayer()!=p) {
+						Position pos = board.getPositions()[rank + j][file + i];
+						if (pos.getPiece().getPlayer() != p) {
 							legal_moves.add(pos);
 						}
-						}
-					catch (ArrayIndexOutOfBoundsException e) {
+					} catch (ArrayIndexOutOfBoundsException e) {
 
 					}
 				}
@@ -208,6 +209,21 @@ public class Game {
 		return legal_moves;
 	}
 
+	public void promotion(Piece piece) {
+		System.out.print("Promote pawn to another piece? y/n");
+		Scanner sc = new Scanner(System.in);
+		String prom = sc.next();
+		if (prom.equals("y")) {
+			prom = sc.next();
+			while (!board.getSetup().contains(prom)) {
+				System.out.print("Invalid promotion! Choose a new one:");
+				prom = sc.next();
+			}
+			piece.setValue(prom);
+		}
+		sc.close();
+	}
+
 	public List<Position> legalPawn(Position position, Player p) {
 		List<Position> legal_moves = new ArrayList<>();
 		int file = position.getFile();
@@ -215,48 +231,67 @@ public class Game {
 		if (p == p1) {
 			try {
 				Position pos = board.getPositions()[rank + 1][file];
-				if (pos.getPiece().getPlayer()!=p) {
+				if (pos.getPiece().getPlayer() == null) {
 					legal_moves.add(pos);
 				}
-				}
-			catch (ArrayIndexOutOfBoundsException e) {
+			} catch (ArrayIndexOutOfBoundsException e) {
 
 			}
 			if (rank == 1) {
 				try {
 					Position pos = board.getPositions()[rank + 2][file];
-					if (pos.getPiece().getPlayer()!=p) {
+					if (pos.getPiece().getPlayer() == null) {
 						legal_moves.add(pos);
 					}
-					}
-				catch (ArrayIndexOutOfBoundsException e) {
+				} catch (ArrayIndexOutOfBoundsException e) {
 
 				}
+			}
+			try {
+				Position pos = board.getPositions()[rank + 1][file + 1];
+				if (pos.getPiece().getPlayer() == p2) {
+					legal_moves.add(pos);
+				}
+				pos = board.getPositions()[rank + 1][file - 1];
+				if (pos.getPiece().getPlayer() == p2) {
+					legal_moves.add(pos);
+				}
+			} catch (ArrayIndexOutOfBoundsException e) {
+
 			}
 
 		}
 		if (p == p2) {
 			try {
 				Position pos = board.getPositions()[rank - 1][file];
-				if (pos.getPiece().getPlayer()!=p) {
+				if (pos.getPiece().getPlayer() == null) {
 					legal_moves.add(pos);
 				}
-				}
-			catch (ArrayIndexOutOfBoundsException e) {
+			} catch (ArrayIndexOutOfBoundsException e) {
 
 			}
-			if (rank == 1) {
+			if (rank == 6) {
 				try {
 					Position pos = board.getPositions()[rank - 2][file];
-					if (pos.getPiece().getPlayer()!=p) {
+					if (pos.getPiece().getPlayer() == null) {
 						legal_moves.add(pos);
 					}
-					}
-				catch (ArrayIndexOutOfBoundsException e) {
+				} catch (ArrayIndexOutOfBoundsException e) {
 
 				}
 			}
+			try {
+				Position pos = board.getPositions()[rank + 1][file + 1];
+				if (pos.getPiece().getPlayer() == p1) {
+					legal_moves.add(pos);
+				}
+				pos = board.getPositions()[rank + 1][file - 1];
+				if (pos.getPiece().getPlayer() == p1) {
+					legal_moves.add(pos);
+				}
+			} catch (ArrayIndexOutOfBoundsException e) {
 
+			}
 		}
 
 		return legal_moves;

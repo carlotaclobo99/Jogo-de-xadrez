@@ -5,6 +5,7 @@ public class Piece {
 	private String value;
 	private Player player;
 
+	private Integer number_moves= 0;
 	public Piece() {
 		
 	}
@@ -29,6 +30,14 @@ public class Piece {
 
 	public void setPlayer(Player player) {
 		this.player = player;
+	}
+
+	public Integer getNumber_moves() {
+		return number_moves;
+	}
+
+	public void setNumber_moves(Integer number_moves) {
+		this.number_moves = number_moves;
 	}
 	
 	
