@@ -11,6 +11,7 @@ public class Game {
 	List<Move> p1_moves = new ArrayList<Move>();
 	List<Move> p2_moves = new ArrayList<Move>();
 	List<Player> players = new ArrayList<Player>();
+	List<Position> possible_moves = new ArrayList<Position>();
 
 	private Player p1;
 	private Player p2;
@@ -162,97 +163,103 @@ public class Game {
 		return legal;
 	}
 
-	public boolean legalRook(Move move, Player p) {
-		Position init_pos = move.getStart();
-		Position dest_pos = move.getEnd();
-		boolean legal = true;
-		String warning = "";
+	public List<Position> legalRook(Position position, Player p) {
+		List<Position> legal_moves = new ArrayList<>();
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				Position pos = board.getPositions()[i][j];
+				if (pos.getPiece().getPlayer() == p) {
 
-		if (init_pos.getFile() != dest_pos.getFile() && init_pos.getRank() != dest_pos.getRank()) {
-			warning += "The rook can only move along the same file or rank!";
-			legal = false;
-		}
+				} else {
 
-		if (legal == false) {
-			System.out.println(warning);
-		}
-		return legal;
-	}
-
-	public boolean legalBishop(Move move, Player p) {
-		Position init_pos = move.getStart();
-		Position dest_pos = move.getEnd();
-		boolean legal = true;
-		String warning = "";
-
-		if (Math.abs((init_pos.getFile() - dest_pos.getFile())) != Math
-				.abs((init_pos.getRank() - dest_pos.getRank()))) {
-			warning += "The bishop can only move diagonally! \n";
-			legal = false;
-		}
-
-		if (legal == false) {
-			System.out.println(warning);
-		}
-		return legal;
-	}
-
-	public boolean legalKnight(Move move, Player p) {
-		Position init_pos = move.getStart();
-		Position dest_pos = move.getEnd();
-		boolean legal = true;
-		String warning = "";
-		int file = init_pos.getFile();
-		int rank = init_pos.getRank();
-		if ((Math.abs(dest_pos.getFile() - file) == 2) && (Math.abs(dest_pos.getRank() - rank) == 1)
-				|| (Math.abs(dest_pos.getFile() - file) == 1) && (Math.abs(dest_pos.getRank() - rank) == 2)) {
-		} else {
-			legal = false;
-			warning = "Neigh! Illegal horse move!";
-		}
-
-		if (legal == false) {
-			System.out.println(warning);
-		}
-		return legal;
-	}
-
-	public boolean legalPawn(Move move, Player p) {
-		boolean legal = true;
-		Position init_pos = move.getStart();
-		Position dest_pos = move.getEnd();
-		String warning = "";
-		int file = init_pos.getFile();
-		int rank = init_pos.getRank();
-		if (rank == 1 || rank == 7) {
-			if (Math.abs(dest_pos.getRank() - rank) > 2 || file != dest_pos.getFile()) {
-				legal = false;
-				warning += "The pawn can only move up to two cells forward! \n";
-			}
-		} else {
-			if (Math.abs(dest_pos.getRank() - rank) > 1 || file != dest_pos.getFile()) {
-				legal = false;
-				warning += "The pawn can only move one cell forward! \n";
-
+				}
 			}
 		}
+
+		return legal_moves;
+	}
+
+	public List<Position> legalBishop(Position position, Player p) {
+		List<Position> legal_moves = new ArrayList<>();
+
+		return legal_moves;
+	}
+
+	public List<Position> legalKnight(Position position, Player p) {
+		List<Position> legal_moves = new ArrayList<>();
+		int file = position.getFile();
+		int rank = position.getRank();
+		for (int i = -2; i < 3; i++) {
+			for (int j = -2; j < 3; j++) {
+				if ((Math.abs(i) == 2) && (Math.abs(j) == 1) || (Math.abs(i) == 1) && (Math.abs(j) == 2)) {
+					try {
+						Position pos = board.getPositions()[rank+j][file+i];
+						if (pos.getPiece().getPlayer()!=p) {
+							legal_moves.add(pos);
+						}
+						}
+					catch (ArrayIndexOutOfBoundsException e) {
+
+					}
+				}
+			}
+		}
+
+		return legal_moves;
+	}
+
+	public List<Position> legalPawn(Position position, Player p) {
+		List<Position> legal_moves = new ArrayList<>();
+		int file = position.getFile();
+		int rank = position.getRank();
 		if (p == p1) {
-			if (dest_pos.getRank() < rank) {
-				legal = false;
-				warning += "The pawn can only move forward!";
+			try {
+				Position pos = board.getPositions()[rank + 1][file];
+				if (pos.getPiece().getPlayer()!=p) {
+					legal_moves.add(pos);
+				}
+				}
+			catch (ArrayIndexOutOfBoundsException e) {
+
 			}
+			if (rank == 1) {
+				try {
+					Position pos = board.getPositions()[rank + 2][file];
+					if (pos.getPiece().getPlayer()!=p) {
+						legal_moves.add(pos);
+					}
+					}
+				catch (ArrayIndexOutOfBoundsException e) {
+
+				}
+			}
+
 		}
 		if (p == p2) {
-			if (dest_pos.getRank() > rank) {
-				legal = false;
-				warning += "The pawn can only move forward!";
+			try {
+				Position pos = board.getPositions()[rank - 1][file];
+				if (pos.getPiece().getPlayer()!=p) {
+					legal_moves.add(pos);
+				}
+				}
+			catch (ArrayIndexOutOfBoundsException e) {
+
 			}
-		}
-		if (legal == false) {
-			System.out.println(warning);
+			if (rank == 1) {
+				try {
+					Position pos = board.getPositions()[rank - 2][file];
+					if (pos.getPiece().getPlayer()!=p) {
+						legal_moves.add(pos);
+					}
+					}
+				catch (ArrayIndexOutOfBoundsException e) {
+
+				}
+			}
+
 		}
 
-		return legal;
+		return legal_moves;
 	}
 
 	public boolean legalTake(Move move, Player p) {
@@ -268,90 +275,29 @@ public class Game {
 		return legal;
 	}
 
-	public boolean legalSkip(Move move) {
-		boolean legal = true;
-		Position start = move.getStart();
-		Position end = move.getEnd();
-		int range_ranks = end.getRank() - start.getRank();
-		int range_files = end.getFile() - start.getFile();
-		Piece piece = move.getStart().getPiece();
-		String val = piece.getValue().toLowerCase();
-		String warning = "You cannot skip over pieces!!";
-		if (val.equals("b")) {
-			for (int i = 0; i < range_ranks; i++) {
-				for (int j = 0; j < range_files; j++) {
-					Position aux = board.getPositions()[start.getRank() + i][start.getFile() + j];
-					if (aux.getPiece().getPlayer() != null) {
-						legal = false;
-					}
-				}
-			}
-		}
-		if (val.equals("r")) {
-			if (start.getRank() == end.getRank()) {
-				for (int i = 0; i < range_files; i++) {
-					Piece p = board.getPositions()[start.getRank()][start.getFile() + i].getPiece();
-					if (p.getPlayer() != null) {
-						legal = false;
-					}
-				}
-			}
-			if (start.getFile() == end.getFile()) {
-				for (int i = 0; i < range_ranks; i++) {
-					Piece p = board.getPositions()[start.getRank() + i][start.getFile()].getPiece();
-					if (p.getPlayer() != null) {
-						legal = false;
-					}
-				}
-			}
-		}
+	public List<Position> legalMoves(Position position, Player p) {
+		List<Position> legal_moves = new ArrayList<>();
 
-		if (legal == false) {
-			System.out.println(warning);
-		}
-		return legal;
-	}
-
-	public boolean legalMove(Move move, Player p) {
-		Position init_pos = move.getStart();
-		boolean legal = false;
-		boolean legal_move = true;
-		boolean legal_piece = true;
-		boolean legal_skip = true;
-		Piece piece = init_pos.getPiece();
+		Piece piece = position.getPiece();
 		String val = piece.getValue().toLowerCase().trim();
 		String bishop = "b";
 		String rook = "r";
 		String knight = "n";
 		String pawn = "p";
-
-		if (val.equals(rook)) {
-			legal_piece = legalRook(move, p);
-		}
-
-		if (val.equals(bishop)) {
-			legal_piece = legalBishop(move, p);
-		}
-
-		if (val.equals(knight)) {
-			legal_piece = legalKnight(move, p);
-		}
-
 		if (val.equals(pawn)) {
-			legal_piece = legalPawn(move, p);
+			legal_moves = legalPawn(position, p);
+		}
+		if (val.equals(rook)) {
+			legal_moves = legalRook(position, p);
+		}
+		if (val.equals(bishop)) {
+			legal_moves = legalBishop(position, p);
+		}
+		if (val.equals(knight)) {
+			legal_moves = legalKnight(position, p);
 		}
 
-		legal_move = legalTake(move, p);
-		legal_skip = legalSkip(move);
-
-		if (legal_piece && legal_move && legal_skip) {
-			legal = true;
-		}
-		if (legal == false) {
-			System.out.println("Choose another cell: ");
-		}
-
-		return legal;
+		return legal_moves;
 
 	}
 
