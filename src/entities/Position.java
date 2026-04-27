@@ -1,22 +1,16 @@
 package entities;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Position {
 
-	List<Character> files = new ArrayList<Character>(List.of('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'));
-	List<Character> ranks = new ArrayList<Character>(List.of('1', '2', '3', '4', '5', '6', '7', '8'));
-	List<String> setup = new ArrayList<String>(List.of("R", "B", "N", "Q", "K", "N", "B", "R"));
-
-	private int file; // Columns
-	private int rank; // Rows
+	private String file; // Columns
+	private int rank;    // Rows
 	private Piece piece; // piece
+	private boolean validCapture = false;
 
 	public Position() {
 	}
 
-	public Position(int rank, int file, Piece piece) {
+	public Position(String file, int rank, Piece piece) {
 		super();
 		this.file = file;
 		this.rank = rank;
@@ -25,14 +19,14 @@ public class Position {
 
 	@Override
 	public String toString() {
-		return "Position [file=" + file + ", rank=" + rank + "]";
+		return "Position [file=" + file + ", rank=" + rank + ", piece=" + piece + "]";
 	}
 
-	public int getFile() {
+	public String getFile() {
 		return file;
 	}
 
-	public void setFile(int file) {
+	public void setFile(String file) {
 		this.file = file;
 	}
 
@@ -40,7 +34,7 @@ public class Position {
 		return rank;
 	}
 
-	public void setRank(Character rank) {
+	public void setRank(int rank) {
 		this.rank = rank;
 	}
 
@@ -52,10 +46,18 @@ public class Position {
 		this.piece = piece;
 	}
 
+	public boolean isValidCapture() {
+		return validCapture;
+	}
+
+	public void setValidCapture(boolean validCapture) {
+		this.validCapture = validCapture;
+	}
+
 	public String printPos() {
-		String f = files.get(file).toString();
-		String r = ranks.get(rank).toString();
-		return f+r;
+		String file = this.getFile();
+		String rank = String.valueOf(this.getRank());
+		return file+rank;
 	}
 
 }

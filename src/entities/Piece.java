@@ -1,27 +1,29 @@
 package entities;
 
+import enums.PieceType;
+
 public class Piece {
 	
-	private String value;
+	private PieceType pieceType;
 	private Player player;
 
-	private Integer number_moves= 0;
+	private Integer number_moves = 0;
 	public Piece() {
 		
 	}
 
-	public Piece(String value, Player player) {
+	public Piece(PieceType pieceType, Player player) {
 		super();
-		this.value = value;
+		this.pieceType = pieceType;
 		this.player = player;
 	}
 
-	public String getValue() {
-		return value;
+	public PieceType getPieceType() {
+		return this.pieceType;
 	}
 
-	public void setValue(String value) {
-		this.value = value;
+	public void setPieceType(PieceType pieceType) {
+		this.pieceType = pieceType;
 	}
 
 	public Player getPlayer() {
@@ -40,6 +42,4 @@ public class Piece {
 		this.number_moves = number_moves;
 	}
 	
-	
-
 }

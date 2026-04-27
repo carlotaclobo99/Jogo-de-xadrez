@@ -3,33 +3,56 @@ package entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import enums.PieceType;
+
 public class Board {
 
-	List<Character> files = new ArrayList<Character>(List.of('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'));
-	List<Character> ranks = new ArrayList<Character>(List.of('1', '2', '3', '4', '5', '6', '7', '8'));
-	List<String> setup = new ArrayList<String>(List.of("R", "B", "N", "Q", "K", "N", "B", "R"));
 	
-	private Position positions[][] = new Position[8][8];
-
+	private List<List<Position>> grid = new ArrayList<List<Position>>();
+	List<PieceType> setup = new ArrayList<PieceType>(List.of(PieceType.ROOK, PieceType.KNIGHT, PieceType.BISHOP, 
+			PieceType.QUEEN, PieceType.KING, PieceType.BISHOP, PieceType.KNIGHT, PieceType.ROOK));
+	
 	public Board() {
+		
+		for (int rank = 8; rank >= 1; rank--) {
+		    List<Position> row = new ArrayList<>();
+		    for (char file = 'a'; file <= 'h'; file++) {
+		    	Position pos = new Position(Character.toString(file), rank, new Piece());
+		    	row.add(pos);
+		    }
+		    grid.add(row);
+		}
+		
 	}
 
-	public List<Character> getFiles() {
-		return files;
+	public List<List<Position>> getGrid() {
+		return grid;
 	}
 
-	public List<Character> getRanks() {
-		return ranks;
+	public void setGrid(List<List<Position>> grid) {
+		this.grid = grid;
 	}
 
-	public List<String> getSetup() {
+	public void setSetup(List<PieceType> setup) {
+		this.setup = setup;
+	}
+
+	public List<PieceType> getSetup() {
 		return setup;
 	}
-
-	public Position[][] getPositions() {
-		return positions;
+	
+	public void printGrid() {
+		for (List<Position> row : this.grid) {
+			for(Position pos : row) {
+				System.out.print(pos.printPos());
+			}
+			System.out.println();
+		}
 	}
-
-
+	
+	public void printRow(int i) {
+		for (Position pos : this.grid.get(i)) System.out.print(pos.printPos());
+	}	
 }
+
 

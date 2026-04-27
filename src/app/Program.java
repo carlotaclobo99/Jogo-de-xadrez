@@ -9,6 +9,7 @@ import entities.Game;
 import entities.Move;
 import entities.Player;
 import entities.Position;
+import enums.Color;
 
 public class Program {
 
@@ -18,197 +19,183 @@ public class Program {
 		List<String> choices = new ArrayList<String>();
 		choices.add("y");
 		choices.add("n");
-		Player p1 = new Player("Maria", "white");
-		Player p2 = new Player("Sara", "black");
-		Player pnone = null;
+		Player p1 = new Player("Maria", Color.BLUE, "south");
+		Player p2 = new Player("Sara", Color.RED, "north");
 		List<Player> players = new ArrayList<Player>(List.of(p1, p2));
 
 		// Initializing game:
 		Board board = new Board();
 		Game game = new Game(board, p1, p2);
 		game.createBoard();
+		// game.getBoard().printGrid();
 		System.out.println("Creating new board:" + "\n");
 		System.out.println(game.loadBoard());
 		System.out.println();
 		String check = "";
 		Player winner = null;
-		Position new_pos = null;
+		Position newPosition = null;
 		while (check != "y") {
 			for (Player p : players) {
 
 				System.out.print(p.getName() + "'s turn, ");
 				System.out.println(p.getColor() + " to move:");
 				//
-				//
-				// Choose starting piece:
-				//
+				// Choose startingPieceingPieceing piece:
 				//
 				System.out.println("Choose piece to move:");
-				String start = sc.next();
-				// Check if input is valid and if position exists:
-				Character start_file = (char) start.charAt(0);
-				Character start_rank = (char) start.charAt(1);
-
-				Position current = board.getPositions()[board.getRanks().indexOf(start_rank)][board.getFiles()
-						.indexOf(start_file)];
+				String startingPiece = sc.next();
+				while (!validInput(startingPiece)) {
+					startingPiece = sc.next();
+				}
+				Position currentPosition = parsePosition(game, startingPiece);
 
 				// Check if piece is legal:
-				while (game.legalPiece(current.getPiece(), p) != true) {
-					// Choose until its not:
-					start = sc.next();
-
-					// Set current position:
-					start_file = (char) start.charAt(0);
-					start_rank = (char) start.charAt(1);
-					current = board.getPositions()[board.getRanks().indexOf(start_rank)][board.getFiles()
-							.indexOf(start_file)];
+				while (game.legalPiece(currentPosition.getPiece(), p) != true) {
+					startingPiece = sc.next();
+					while (!validInput(startingPiece)) {
+						startingPiece = sc.next();
+					}
+					currentPosition = parsePosition(game, startingPiece);
 				}
 
 				// Check if there are any possible moves:
-				while (game.legalMoves(current, p).isEmpty()) {
+				while (game.legalMoves(currentPosition, p).isEmpty()) {
+					System.out.println(game.loadBoard());
 					System.out.println("No valid moves with this piece! Please pick a different one:");
-					// Choose until its not:
-					start = sc.next();
-					start_file = (char) start.charAt(0);
-					start_rank = (char) start.charAt(1);
-					// Set current position:
-					current = board.getPositions()[board.getRanks().indexOf(start_rank)][board.getFiles()
-							.indexOf(start_file)];
-
-					while (game.legalPiece(current.getPiece(), p) != true) {
-						// Choose until its not:
-						start = sc.next();
-
-						// Set current position:
-						start_file = (char) start.charAt(0);
-						start_rank = (char) start.charAt(1);
-						current = board.getPositions()[board.getRanks().indexOf(start_rank)][board.getFiles()
-								.indexOf(start_file)];
+					startingPiece = sc.next();
+					while (!validInput(startingPiece)) {
+						startingPiece = sc.next();
 					}
+					currentPosition = parsePosition(game, startingPiece);
 
+					while (game.legalPiece(currentPosition.getPiece(), p) != true) {
+						startingPiece = sc.next();
+						while (!validInput(startingPiece)) {
+							startingPiece = sc.next();
+						}
+						currentPosition = parsePosition(game, startingPiece);
+					}
 				}
 
-				String moves = "";
-				List<Position> legal_moves = game.legalMoves(current, p);
-				for (Position pos : legal_moves) {
-					moves += pos.printPos() + " ";
-				}
+				System.out.println(game.loadValidMoves(currentPosition, p));
 
+				List<Position> legal_moves = game.legalMoves(currentPosition, p);
 				System.out.print("Choose your next move or go back: ");
-				System.out.println(moves);
 				String end = sc.next();
+				while (!validInput(end)) {
+					end = sc.next();
+				}
 				System.out.println();
 				if (!end.equals("b")) {
-					Character end_file = (char) end.charAt(0);
-					Character end_rank = (char) end.charAt(1);
-					new_pos = board.getPositions()[board.getRanks().indexOf(end_rank)][board.getFiles()
-							.indexOf(end_file)];
-
-					while (!legal_moves.contains(new_pos)) {
-						System.out.println("Please choose a valid move!: " + moves);
+					System.out.println("Not going back");
+					newPosition = parsePosition(game, end);
+					while (!legal_moves.contains(newPosition)) {
+						System.out.println("Please choose a valid move!: ");
 						end = sc.next();
-						end_file = (char) end.charAt(0);
-						end_rank = (char) end.charAt(1);
-						new_pos = board.getPositions()[board.getRanks().indexOf(end_rank)][board.getFiles()
-								.indexOf(end_file)];
+						while (!validInput(end)) {
+							end = sc.next();
+						}
+						newPosition = parsePosition(game, end);
 					}
 				}
 
 				while (end.equals("b")) {
+					System.out.println("Part 3");
+					System.out.println(game.loadBoard());
 					System.out.println("Choose piece to move:");
-					start = sc.next();
-					// Check if input is valid and if position exists:
-					start_file = (char) start.charAt(0);
-					start_rank = (char) start.charAt(1);
-
-					current = board.getPositions()[board.getRanks().indexOf(start_rank)][board.getFiles()
-							.indexOf(start_file)];
+					end = sc.next();
+					while (!validInput(end)) {
+						end = sc.next();
+					}
+					currentPosition = parsePosition(game, end);
 
 					// Check if piece is legal:
-					while (game.legalPiece(current.getPiece(), p) != true) {
-						// Choose until its not:
-						start = sc.next();
-
-						// Set current position:
-						start_file = (char) start.charAt(0);
-						start_rank = (char) start.charAt(1);
-						current = board.getPositions()[board.getRanks().indexOf(start_rank)][board.getFiles()
-								.indexOf(start_file)];
+					while (game.legalPiece(currentPosition.getPiece(), p) != true) {
+						end = sc.next();
+						while (!validInput(end)) {
+							end = sc.next();
+						}
+						currentPosition = parsePosition(game, end);
 					}
 
 					// Check if there are any possible moves:
-					while (game.legalMoves(current, p).isEmpty()) {
+					while (game.legalMoves(currentPosition, p).isEmpty()) {
+						System.out.println(game.loadBoard());
 						System.out.println("No valid moves with this piece! Please pick a different one:");
-						// Choose until its not:
-						start = sc.next();
-						start_file = (char) start.charAt(0);
-						start_rank = (char) start.charAt(1);
-						// Set current position:
-						current = board.getPositions()[board.getRanks().indexOf(start_rank)][board.getFiles()
-								.indexOf(start_file)];
-
-						while (game.legalPiece(current.getPiece(), p) != true) {
-							// Choose until its not:
-							start = sc.next();
-
-							// Set current position:
-							start_file = (char) start.charAt(0);
-							start_rank = (char) start.charAt(1);
-							current = board.getPositions()[board.getRanks().indexOf(start_rank)][board.getFiles()
-									.indexOf(start_file)];
+						end = sc.next();
+						while (!validInput(end)) {
+							end = sc.next();
 						}
+						currentPosition = parsePosition(game, end);
 
+						while (game.legalPiece(currentPosition.getPiece(), p) != true) {
+							end = sc.next();
+							while (!validInput(end)) {
+								end = sc.next();
+							}
+							currentPosition = parsePosition(game, end);
+						}
 					}
+					System.out.println(game.loadValidMoves(currentPosition, p));
 
-					moves = "";
-					legal_moves = game.legalMoves(current, p);
-					for (Position pos : legal_moves) {
-						moves += pos.printPos() + " ";
-					}
-
+					legal_moves = game.legalMoves(currentPosition, p);
 					System.out.print("Choose your next move or go back: ");
-					System.out.println(moves);
 					end = sc.next();
+					while (!validInput(end)) {
+						end = sc.next();
+					}
 					System.out.println();
 					if (!end.equals("b")) {
-						Character end_file = (char) end.charAt(0);
-						Character end_rank = (char) end.charAt(1);
-						new_pos = board.getPositions()[board.getRanks().indexOf(end_rank)][board.getFiles()
-								.indexOf(end_file)];
-
-						while (!legal_moves.contains(new_pos)) {
-							System.out.println("Please choose a valid move!: " + moves);
+						newPosition = parsePosition(game, end);
+						while (!legal_moves.contains(newPosition)) {
+							System.out.println("Please choose a valid move!: ");
 							end = sc.next();
-							end_file = (char) end.charAt(0);
-							end_rank = (char) end.charAt(1);
-							new_pos = board.getPositions()[board.getRanks().indexOf(end_rank)][board.getFiles()
-									.indexOf(end_file)];
+							while (!validInput(end)) {
+								end = sc.next();
+							}
+							newPosition = parsePosition(game, end);
 						}
 					}
 				}
 
-				Move move = new Move(current, new_pos);
-				if (new_pos.getPiece().getValue().toLowerCase().equals("k")) {
-					winner = p;
+				Move move = new Move(currentPosition, newPosition);
+				game.movePiece(move, p);
+				System.out.println(game.loadBoard());
+
+				if (winner != null) {
 					break;
 				}
-				current.getPiece().setNumber_moves(current.getPiece().getNumber_moves() + 1);
-				if ((new_pos.getRank()==1 || new_pos.getRank()==7) && current.getPiece().getValue().toLowerCase().equals("p")) {
-					game.promotion(new_pos.getPiece());
-				}
-				game.movePiece(move, p);
 
-				System.out.println(game.loadBoard());
 			}
-			
-			if (winner!=null) {
-				break;
-			}
-
+			// System.out.println(winner.getName() + " is the winner!");
 		}
-		System.out.println(winner.getName()+" is the winner!");
-
-		// Close scanner;
 		sc.close();
 	}
+
+	// Auxiliary methods
+
+	public static boolean validInput(String input) {
+		boolean valid = true;
+		if (input.length() != 2) {
+			valid = false;
+		}
+		if (valid == false) {
+			System.out.println("Invalid input!");
+		}
+		return valid;
+
+	}
+
+	public static Position parsePosition(Game game, String input) {
+		Character file = (char) input.charAt(0);
+		Character rank = (char) input.charAt(1);
+		int fileIndex = game.files.indexOf(file);
+		int rankIndex = game.ranks.indexOf(rank);
+		Position position = game.getBoard().getGrid().get(rankIndex).get(fileIndex);
+		return position;
+	}
+
+	public void checkLegal() {
+	}
+
 }
